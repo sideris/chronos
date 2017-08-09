@@ -50,22 +50,24 @@ class MainActivity : WearableActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        when (keyCode) {
-            KeyEvent.KEYCODE_NAVIGATE_NEXT -> {
-                minutes += 5
-                animateDurationDisplay(0, -Y_OFFSET)
-                return true
-            }
-            KeyEvent.KEYCODE_NAVIGATE_PREVIOUS -> {
-                if(minutes > 5) {
-                    minutes -= 5
-                    animateDurationDisplay(0, Y_OFFSET)
+        if (!timerRunning && timeWhenStopped == 0L) {
+            when (keyCode) {
+                KeyEvent.KEYCODE_NAVIGATE_NEXT -> {
+                    minutes += 5
+                    animateDurationDisplay(0, -Y_OFFSET)
                     return true
                 }
-                return false
+                KeyEvent.KEYCODE_NAVIGATE_PREVIOUS -> {
+                    if(minutes > 5) {
+                        minutes -= 5
+                        animateDurationDisplay(0, Y_OFFSET)
+                        return true
+                    }
+                    return false
+                }
             }
+            this.durationDisplay.text = minutesToFormat(minutes)
         }
-        this.durationDisplay.text = minutesToFormat(minutes)
         return super.onKeyDown(keyCode, event)
     }
 
