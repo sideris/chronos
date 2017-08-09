@@ -71,8 +71,7 @@ class MainActivity : WearableActivity() {
         timerRunning = true
         this.chronos.base = SystemClock.elapsedRealtime() + timeWhenStopped
         this.chronos.start()
-        this.durationDisplay.visibility = View.VISIBLE
-        replace(0, -20)
+        animateDuratioDisplay(0, -20)
     }
 
     fun timerPause() {
@@ -108,22 +107,43 @@ class MainActivity : WearableActivity() {
         return DateFormat.format("mm:ss", time).toString()
     }
 
-    fun replace(xTo: Int, yTo: Int) {
+    fun animateDuratioDisplay(xTo: Int, yTo: Int) {
         // create set of animations
+        val basePosition = intArrayOf(
+                this.durationDisplay.top, this.durationDisplay.left,
+                this.durationDisplay.bottom, this.durationDisplay.right
+        )
+
         val replaceAnimation = AnimationSet(false)
         replaceAnimation.interpolator = DecelerateInterpolator()
         // animations should be applied on the finish line
         replaceAnimation.fillAfter = true
+        this.durationDisplay.visibility = View.VISIBLE
 
-        val translation = TranslateAnimation(0, 0f, TranslateAnimation.ABSOLUTE, (xTo - this.durationDisplay.left).toFloat(),
-                0, 0f, TranslateAnimation.ABSOLUTE, (yTo - this.durationDisplay.right).toFloat())
+        val translation = TranslateAnimation(0, 0f, TranslateAnimation.ABSOLUTE,
+                (xTo - this.durationDisplay.left).toFloat(),
+                0, 0f,
+                TranslateAnimation.ABSOLUTE, (yTo - this.durationDisplay.right).toFloat())
         translation.duration = 1000
+
         val alpha = AlphaAnimation(1f, 0f)
         alpha.duration = 500
+
         replaceAnimation.addAnimation(translation)
         replaceAnimation.addAnimation(alpha)
+
         this.durationDisplay.animation = replaceAnimation
-        this.durationDisplay.animate()
+        this.durationDisplay
+                .animate()
+                .withEndAction({
+                        Log.d("chronos:animation", "finished")
+                        this.durationDisplay.alpha = 1f
+                        this.durationDisplay.visibility = View.VISIBLE
+                        this.durationDisplay.top = basePosition[0]
+                        this.durationDisplay.left = basePosition[1]
+                        this.durationDisplay.bottom = basePosition[2]
+                        this.durationDisplay.right = basePosition[3]
+                }).start()
     }
 
 
