@@ -12,9 +12,9 @@ import android.util.Log
 
 
 class MainActivity : WearableActivity() {
-    var timerRunning = false
+    var timerRunning: Boolean = false
     var timeWhenStopped: Long = 0
-    val minutes = 25
+    val minutes: Int = 25
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,6 @@ class MainActivity : WearableActivity() {
         this.container.setOnClickListener {
             if(timerRunning)    timerPause()
             else                timerStart()
-            timerRunning = !timerRunning
         }
         this.container.setOnLongClickListener {
             timerPause()
@@ -45,11 +44,13 @@ class MainActivity : WearableActivity() {
     }
 
     fun timerStart() {
+        timerRunning = true
         this.chronos.base = SystemClock.elapsedRealtime() + timeWhenStopped
         this.chronos.start()
     }
 
     fun timerPause() {
+        timerRunning = false
         this.chronos.stop()
         timeWhenStopped = this.chronos.base - SystemClock.elapsedRealtime()
     }
@@ -58,7 +59,6 @@ class MainActivity : WearableActivity() {
         this.chronos.base = SystemClock.elapsedRealtime()
         this.chronos.text = "00:00"
         timeWhenStopped = 0
-        timerRunning = false
     }
 
     fun getTimeFromMillis(millis: Long): IntArray {
