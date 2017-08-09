@@ -19,6 +19,7 @@ class MainActivity : WearableActivity() {
     var timerRunning: Boolean = false
     var timeWhenStopped: Long = 0
     var minutes: Int = 25
+    var Y_OFFSET = 20
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +53,16 @@ class MainActivity : WearableActivity() {
         when (keyCode) {
             KeyEvent.KEYCODE_NAVIGATE_NEXT -> {
                 minutes += 5
+                animateDurationDisplay(0, -Y_OFFSET)
                 return true
             }
             KeyEvent.KEYCODE_NAVIGATE_PREVIOUS -> {
                 if(minutes > 5) {
                     minutes -= 5
+                    animateDurationDisplay(0, Y_OFFSET)
                     return true
                 }
                 return false
-
             }
         }
         this.durationDisplay.text = minutesToFormat(minutes)
@@ -71,7 +73,6 @@ class MainActivity : WearableActivity() {
         timerRunning = true
         this.chronos.base = SystemClock.elapsedRealtime() + timeWhenStopped
         this.chronos.start()
-        animateDuratioDisplay(0, -20)
     }
 
     fun timerPause() {
@@ -107,17 +108,10 @@ class MainActivity : WearableActivity() {
         return DateFormat.format("mm:ss", time).toString()
     }
 
-    fun animateDuratioDisplay(xTo: Int, yTo: Int) {
-        // create set of animations
-        val basePosition = intArrayOf(
-                this.durationDisplay.top, this.durationDisplay.left,
-                this.durationDisplay.bottom, this.durationDisplay.right
-        )
-
+    fun animateDurationDisplay(xTo: Int, yTo: Int) {
         val replaceAnimation = AnimationSet(false)
         replaceAnimation.interpolator = DecelerateInterpolator()
-        // animations should be applied on the finish line
-        replaceAnimation.fillAfter = true
+        replaceAnimation.fillAfter = true  // animations should be applied on the finish line
         this.durationDisplay.visibility = View.VISIBLE
 
         val translation = TranslateAnimation(0, 0f, TranslateAnimation.ABSOLUTE,
@@ -136,13 +130,9 @@ class MainActivity : WearableActivity() {
         this.durationDisplay
                 .animate()
                 .withEndAction({
-                        Log.d("chronos:animation", "finished")
-                        this.durationDisplay.alpha = 1f
-                        this.durationDisplay.visibility = View.VISIBLE
-                        this.durationDisplay.top = basePosition[0]
-                        this.durationDisplay.left = basePosition[1]
-                        this.durationDisplay.bottom = basePosition[2]
-                        this.durationDisplay.right = basePosition[3]
+                    this.durationDisplay.clearAnimation()
+                    this.durationDisplay.visibility = View.INVISIBLE
+                    Log.d("chronos:animation", "finished")
                 }).start()
     }
 
