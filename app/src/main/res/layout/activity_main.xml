@@ -22,7 +22,20 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+            <TextView
+                android:id="@+id/durationDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:singleLine="false"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="25sp"
+                android:shadowColor="@color/black_54p"
+                android:elevation="4dp"
+                android:typeface="sans"
+                android:visibility="invisible" />
             <Chronometer
                 android:id="@+id/chronos"
                 android:clickable="true"
