@@ -40,11 +40,6 @@ class MainActivity : WearableActivity() {
     }
 
     fun timerPause() {
-        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        val vibrationPattern = longArrayOf(0, 500, 50, 300)
-        //-1 - don't repeat
-        val indexInPatternToRepeat = -1
-        vibrator.vibrate(vibrationPattern, indexInPatternToRepeat)
         this.chronos.stop()
         timeWhenStopped = (this.chronos.base - SystemClock.elapsedRealtime()).toInt()
     }
@@ -52,6 +47,14 @@ class MainActivity : WearableActivity() {
     fun timerReset() {
         this.chronos.base = SystemClock.elapsedRealtime();
         timeWhenStopped = 0
+    }
+
+    fun vibrate() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrationPattern = longArrayOf(0, 500, 50, 300)
+        //-1 - don't repeat
+        val indexInPatternToRepeat = -1
+        vibrator.vibrate(vibrationPattern, indexInPatternToRepeat)
     }
 
 
