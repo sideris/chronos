@@ -1,6 +1,7 @@
 package xyz.pgsideris.pomodoro
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.wearable.activity.WearableActivity
@@ -48,6 +49,19 @@ class MainActivity : WearableActivity() {
             true
         }
     }
+
+//    override fun onEnterAmbient(ambientDetails: Bundle?) {
+//        super.onEnterAmbient(ambientDetails)
+//
+//        this.durationDisplay.setTextColor(Color.DKGRAY)
+//        this.durationDisplay.paint.isAntiAlias = false
+//    }
+//
+//    override fun onExitAmbient() {
+//        super.onExitAmbient()
+//        this.durationDisplay.setTextColor(Color.GREEN)
+//        this.durationDisplay.paint.isAntiAlias = true
+//    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (!timerRunning && timeWhenStopped == 0L) {
@@ -111,15 +125,21 @@ class MainActivity : WearableActivity() {
     }
 
     fun animateDurationDisplay(xTo: Int, yTo: Int) {
+        var yy = 0
+        if(yTo < 0)
+            yy = yTo - this.durationDisplay.right
+        else
+            yy = this.durationDisplay.right - yTo
+
         val replaceAnimation = AnimationSet(false)
         replaceAnimation.interpolator = DecelerateInterpolator()
         replaceAnimation.fillAfter = true  // animations should be applied on the finish line
         this.durationDisplay.visibility = View.VISIBLE
-
+        this.durationDisplay.text = minutesToFormat(minutes)
         val translation = TranslateAnimation(0, 0f, TranslateAnimation.ABSOLUTE,
                 (xTo - this.durationDisplay.left).toFloat(),
                 0, 0f,
-                TranslateAnimation.ABSOLUTE, (yTo - this.durationDisplay.right).toFloat())
+                TranslateAnimation.ABSOLUTE, yy.toFloat())
         translation.duration = 1000
 
         val alpha = AlphaAnimation(1f, 0f)
