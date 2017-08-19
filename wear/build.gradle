@@ -11,7 +11,7 @@ android {
         applicationId "xyz.pgsideris.pomodoro"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 7
+        versionCode 1
         versionName "0.0.1-alpha"
     }
     buildTypes {
